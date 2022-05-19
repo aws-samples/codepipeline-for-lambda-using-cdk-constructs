@@ -1,6 +1,6 @@
 # CDK Constructs for Lambda Pipeline
 
-This demonstration is to show on how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles.
+This demonstration is to show how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles.
 
 # Implementation
 
@@ -8,7 +8,7 @@ This demonstration is to show on how we can start using CDK Constructs and enhan
 
 ![AWS CDK Constructs](./img/cdk-constructs.png "AWS CDK Constructs")
 
-Here, the reader is playing two roles in order to undestand how to implement, it.
+Here, the reader is playing two roles (*Package Developer and Application Developer*) in order to undestand how to implement this solution.
 
 ## Role 1: Package Developer
 
