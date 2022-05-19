@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 14
+  pre_build:
+    commands:
+      - echo Logging into Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - cd ${CODEBUILD_SRC_DIR}/aws-lambda-url
+      - echo Updating ${ecrrepoValue} in config/config.json
+      - sed "s/ecrrepoValue/$ecrrepoName/g" config/config.json > config.json && mv config.json config/config.json
+      - npm install -g aws-cdk
+      - npm install -g typescript
+      - npm install
+      - npx cdk deploy --require-approval never

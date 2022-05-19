@@ -1,0 +1,10 @@
+{
+    "orgName": "amzn",
+    "appName": "app1",
+    "attribute": "01",
+    "envType": "dev",
+    "region": "us-east-1",
+    "coderepoName": "app1",
+    "branchName": "master",
+    "buildSpecPath": "./buildSpec.yaml"
+}

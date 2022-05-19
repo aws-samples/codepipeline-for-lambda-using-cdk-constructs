@@ -1,11 +1,119 @@
-## My Project
+# CDK Constructs for Lambda Pipeline
 
-TODO: Fill this README out!
+This demonstration is to show on how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles.
 
-Be sure to:
+# Implementation
 
-* Change the title in this README
-* Edit your repository description on GitHub
+## HLD
+
+![AWS CDK Constructs](./img/cdk-constructs.png "AWS CDK Constructs")
+
+Here, the reader is playing two roles in order to undestand how to implement, it.
+
+## Role 1: Package Developer
+
+Role of the package developer is to develop a CDK Construct, in our case its going to be a re-usable construct for building a Codepipeline for lambda function that has following functionalities:
+
+## Stage 1
+
+1. Builds the docker file
+2. Push the docker file to ECR (Container Registry)
+
+## Stage 2
+
+1. Pull the docker file from ECR
+2. Update Lambda function with the latest docker image.
+
+Once the consctruct is ready for publishing, Pacakge Developer is going to publish this `lambda-pipeline-construct` as a `npm` package to AWS CodeArtifact (Its a artifact repository, just like Artifactory, nexus or jfrog)
+
+## Role 2: Application Developer
+
+Role of the Application Developer is to include that `lambda-pipeline-construct` in `package.json` file and feed project specific variables like coderepo, branch, etc and does cdk deploy, thats it!!, Application developer would be seeing a Codepipeline specific for his lambda application.
+
+## Pre-requisites
+
+1. Install Nodejs
+2. Install Docker
+3. Install VS Code (Optional)
+4. Install AWS CDK (latest version)
+5. Install AWS CLI
+6. Configure AWS CLI with AWS Account (do `aws sts get-caller-identity` for validation)
+
+## Provision Infrastructure - Package Developer Role
+
+1. `cd lambda-pipeline/prerequisites`
+2. Create CodeArtifact Repo, when you want to publish this `lambda-pipeline-construct` package
+   1. `cd codeartifact` folder and (Optional) make necessary changes to `config/config.json` file
+   2. run `npm install`
+   3. run  `cdk synth` review template file from `cdk.out` folder.
+   4. run `cdk deploy`
+   5. you should be seeing an output something like this: #TBD, take note of `repo-name` and `domain-name`
+3. `cd lambda-pipeline/lambda-pipeline-construct`
+4. (Optional) make necessary changes to `config/config.json`
+5. run `npm install`
+6. Replace Appropriate domain and repository in the following command and run it in `terminal`  
+
+     ```
+     aws codeartifact login \
+        --tool npm \
+        --domain <replace-with-domain-name> \
+        --domain-owner $(aws sts get-caller-identity --output text --query 'Account') \
+        --repository <replace-with-reposiroty-name>
+    ```
+
+7. You should be seeing an output simillar to this:
+ ![AWS CDK Constructs](./img/codeartifact-login.png "AWS CDK Constructs")
+6. clean npm files and folders by `rm package-lock.json && rm -rf node_modules`
+7. Install npm packages by `npm install`
+8. Build a npm pacakges by `npm run build`
+9. Publish construct with the following command `npm publish`
+10. You should be seeing an output simillar to this:
+ ![AWS CDK Constructs](./img/codeartifact-npm-publish.png "AWS CDK Constructs")
+11. *Congratulations !! you made it!!*
+12. Now you can validate it by going to **AWS Console** in CodeArtifact service.
+
+## Provision Infrastructure - Application Developer Role
+
+1. `cd lambda-pipeline/prerequisites`
+2. Create CodeCommit Repo:
+   1. `cd codecommit` folder and (Optional) make necessary changes to `config/config.json` file
+   2. run `npm install`
+   3. run  `cdk synth` review template file from `cdk.out` folder.
+   4. run `cdk deploy`
+   5. you should be seeing an output something like this and take note of `commitreponame`
+   ![AWS CDK Constructs](./img/codecommit-output.png "AWS CDK Constructs")
+3. Create ECR Repo:
+   1. `cd ecrrepo` folder and (Optional) make necessary changes to `config/config.json` file
+   2. run `npm install`
+   3. run  `cdk synth` review template file from `cdk.out` folder.
+   4. run `cdk deploy`
+   5. you should be seeing an output something like this and take note of `ecrreponame`
+   ![AWS CDK Constructs](./img/ecrrepo-output.png "AWS CDK Constructs")
+4. `cd examples/team-a-lambda-pipeline`
+5. Open `package.json` review `dependencies` section `"lambda-pipeline-construct": "0.1.1"` if it doesnt exist please refer to `Provision Infrastructure - Package Developer` steps and update the package name.
+6. run `npm install`
+7. run  `cdk synth` review template file from `cdk.out` folder.
+8. run `cdk deploy`
+9. you should be able to see the output simillar to this:
+    ![Lambda Pipeline](./img/lambda-pipeline-output.png "Lambda Pipeline")
+10. Congratulations !! you made it !!.
+11. Now go to Codepipeline from AWS Console and you should be seeing a pipeline that has been created.
+12. Now, if you want to create a new pipeline for new team, all you need to do is copy `team-a-lambda-pipeline` folder and make necessary changes in `config/config.json` file and run `npm install` and `cdk deploy`. Thats it!!
+
+Finally, dont forget to delete the resources by `cdk destroy` command from terminal.
+
+Reference urls:
+
+[<https://aws.amazon.com/about-aws/whats-new/2022/04/aws-lambda-function-urls-built-in-https-endpoints/>](https://docs.aws.amazon.com/cdk/api/v2/docs/constructs-readme.html)
+
+[<https://aws.amazon.com/blogs/aws/announcing-aws-lambda-function-urls-built-in-https-endpoints-for-single-function-microservices/>](https://aws.amazon.com/blogs/devops/developing-application-patterns-cdk/)
+
+<https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html#function-url>
+
+<https://docs.aws.amazon.com/cdk/v2/guide/getting_started.html#getting_started_install>
+
+<https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html>
+
 
 ## Security
 
