@@ -11,7 +11,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - cd ${CODEBUILD_SRC_DIR}/aws-lambda-url
+      #- cd ${CODEBUILD_SRC_DIR}/lambda
       - echo Updating ${ecrrepoValue} in config/config.json
       - sed "s/ecrrepoValue/$ecrrepoName/g" config/config.json > config.json && mv config.json config/config.json
       - npm install -g aws-cdk

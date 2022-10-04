@@ -1,0 +1,3 @@
+{
+  "app": "npx ts-node lib/team-a-lambda-pipeline-stack.ts"
+}

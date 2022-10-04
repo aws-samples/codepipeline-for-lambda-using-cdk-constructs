@@ -41,30 +41,37 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
 
 ## Provision Infrastructure - Package Developer Role
 
-1. `cd lambda-pipeline/prerequisites`
+1. `cd prerequisites/codeartifact`
 2. Create CodeArtifact Repo, when you want to publish this `lambda-pipeline-construct` package
-   1. `cd codeartifact` folder and (Optional) make necessary changes to `config/config.json` file
+   1. (Optional) make necessary changes to `config/config.json` file
    2. run `npm install`
    3. run  `cdk synth` review template file from `cdk.out` folder.
    4. run `cdk deploy`
-   5. you should be seeing an output something like this: #TBD, take note of `repo-name` and `domain-name`
-3. `cd lambda-pipeline/lambda-pipeline-construct`
+   5. you should be seeing an output something like this: 
+    ```CodeArtifactResources: creating CloudFormation changeset...
+    ✅  CodeArtifactResources
+    ✨  Deployment time: 57.14s
+    Outputs:
+    CodeArtifactResources.amznapp101coderartifactdomainname = amzn-app1-01-cdk-construct-demo
+    CodeArtifactResources.amznapp101coderartifactreponame = amzn-app1-01-lambda-pipeline
+    Stack ARN:
+    arn:aws:cloudformation:us-east-1::stack/CodeArtifactResources/297bfb30-4410-11ed-bd03-0ec07ab1c2b3
+    ```
+    take note of `repo-name` and `domain-name`
+   6. If you are seeing error related to `bootstrap`, run this `cdk bootstrap` command and re-try `cdk deploy`
+3. `cd ../../lambda-pipeline-construct/`
 4. (Optional) make necessary changes to `config/config.json`
-5. run `npm install`
-6. Replace Appropriate domain and repository in the following command and run it in `terminal`  
-
+5. Replace Appropriate domain and repository in the following command and run it in `terminal`  
      ```
      aws codeartifact login \
         --tool npm \
         --domain <replace-with-domain-name> \
         --domain-owner $(aws sts get-caller-identity --output text --query 'Account') \
-        --repository <replace-with-reposiroty-name>
+        --repository <replace-with-repo-name>
     ```
-
-7. You should be seeing an output simillar to this:
+6. You should be seeing an output simillar to this:
  ![AWS CDK Constructs](./img/codeartifact-login.png "AWS CDK Constructs")
-6. clean npm files and folders by `rm package-lock.json && rm -rf node_modules`
-7. Install npm packages by `npm install`
+7. run `npm install`
 8. Build a npm pacakges by `npm run build`
 9. Publish construct with the following command `npm publish`
 10. You should be seeing an output simillar to this:
@@ -74,7 +81,7 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
 
 ## Provision Infrastructure - Application Developer Role
 
-1. `cd lambda-pipeline/prerequisites`
+1. `cd ../prerequisites`
 2. Create CodeCommit Repo:
    1. `cd codecommit` folder and (Optional) make necessary changes to `config/config.json` file
    2. run `npm install`
@@ -83,14 +90,14 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
    5. you should be seeing an output something like this and take note of `commitreponame`
    ![AWS CDK Constructs](./img/codecommit-output.png "AWS CDK Constructs")
 3. Create ECR Repo:
-   1. `cd ecrrepo` folder and (Optional) make necessary changes to `config/config.json` file
+   1. `cd ../ecrrepo` folder and (Optional) make necessary changes to `config/config.json` file
    2. run `npm install`
    3. run  `cdk synth` review template file from `cdk.out` folder.
    4. run `cdk deploy`
    5. you should be seeing an output something like this and take note of `ecrreponame`
    ![AWS CDK Constructs](./img/ecrrepo-output.png "AWS CDK Constructs")
-4. `cd examples/team-a-lambda-pipeline`
-5. Open `package.json` review `dependencies` section `"lambda-pipeline-construct": "0.1.1"` if it doesnt exist please refer to `Provision Infrastructure - Package Developer` steps and update the package name.
+4. `cd ../../examples/team-a-lambda-pipeline`
+5. Open `package.json` review `dependencies` section `"lambda-pipeline-construct": "1.0.0"` if it doesnt exist please refer to `Provision Infrastructure - Package Developer` steps and update the package name.
 6. run `npm install`
 7. run  `cdk synth` review template file from `cdk.out` folder.
 8. run `cdk deploy`
