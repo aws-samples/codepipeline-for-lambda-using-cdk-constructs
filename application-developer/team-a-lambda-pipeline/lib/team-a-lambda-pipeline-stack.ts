@@ -1,6 +1,7 @@
 import { App, Stack, StackProps, CfnOutput } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import { Repository, Code } from 'aws-cdk-lib/aws-codecommit'
+import * as repositoryECR  from 'aws-cdk-lib/aws-ecr'
 import * as lambdapipeline from 'lambda-pipeline-construct';
 import * as config from '../config/config.json';
 import path = require('path');
@@ -34,9 +35,9 @@ export class teamALambdaPipelineStack extends lambdapipeline.LambdaPipelineConst
     })
     new CfnOutput(this, `${general}-codercommit-repo-name`, { value: repo.repositoryName })
 
-    const ecrrepo = new Repository(this, `${general}-ECRRepo`, {
+    const ecrrepo = new repositoryECR.Repository(this, `${general}-ECRRepo`, {
       repositoryName: `${general}-ecr-repo`,
-      // imageScanOnPush: true,
+      imageScanOnPush: true,
     });
     new CfnOutput(this, `${general}-ecr-repo-name`, { value: ecrrepo.repositoryName} )
     
