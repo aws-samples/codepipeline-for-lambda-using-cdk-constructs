@@ -1,6 +1,6 @@
 # CDK Constructs for Lambda Pipeline
 
-This demonstration is to show how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles.
+This demonstration is to show how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles. 
 
 # Implementation
 
