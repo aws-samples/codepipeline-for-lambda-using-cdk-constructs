@@ -1,6 +1,6 @@
 # CDK Constructs for Lambda Pipeline
 
-This demonstration is to show how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles. 
+This demonstration is to show how we can start using CDK Constructs and enhance the producticty and share our published constructs to other team members for the benefit of DevOps Principles.
 
 # Implementation
 
@@ -10,7 +10,11 @@ This demonstration is to show how we can start using CDK Constructs and enhance 
 
 Here, the reader is playing two roles (*Package Developer and Application Developer*) in order to undestand how to implement this solution.
 
-## Role 1: Package Developer
+## Role 1: Shared-Services Developer
+
+Role of the shared services developer is to develop services which are common across the originazation like CodeArtifact etc. that can be consumed by other teams.
+
+## Role 2: Package Developer
 
 Role of the package developer is to develop a CDK Construct, in our case its going to be a re-usable construct for building a Codepipeline for lambda function that has following functionalities:
 
@@ -26,7 +30,7 @@ Role of the package developer is to develop a CDK Construct, in our case its goi
 
 Once the consctruct is ready for publishing, Pacakge Developer is going to publish this `lambda-pipeline-construct` as a `npm` package to AWS CodeArtifact (Its a artifact repository, just like Artifactory, nexus or jfrog)
 
-## Role 2: Application Developer
+## Role 3: Application Developer
 
 Role of the Application Developer is to include that `lambda-pipeline-construct` in `package.json` file and feed project specific variables like coderepo, branch, etc and does cdk deploy, thats it!!, Application developer would be seeing a Codepipeline specific for his lambda application.
 
@@ -39,7 +43,8 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
 5. Install AWS CLI
 6. Configure AWS CLI with AWS Account (do `aws sts get-caller-identity` for validation)
 
-## Provision Infrastructure - Package Developer Role
+
+## Provision Infrastructure - Shared Services Developer Role(Build CodeArtifact) 
 
 1. `cd prerequisites/codeartifact`
 2. Create CodeArtifact Repo, when you want to publish this `lambda-pipeline-construct` package
@@ -59,9 +64,12 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
     ```
     take note of `repo-name` and `domain-name`
    6. If you are seeing error related to `bootstrap`, run this `cdk bootstrap` command and re-try `cdk deploy`
-3. `cd ../../lambda-pipeline-construct/`
-4. (Optional) make necessary changes to `config/config.json`
-5. Replace Appropriate domain and repository in the following command and run it in `terminal`  
+
+## Provision Infrastructure - Package Developer Role(Build Construct)
+
+1. `cd ../../lambda-pipeline-construct/`
+2. (Optional) make necessary changes to `config/config.json`
+3. Replace Appropriate domain and repository in the following command and run it in `terminal`  
      ```
      aws codeartifact login \
         --tool npm \
@@ -69,17 +77,17 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
         --domain-owner $(aws sts get-caller-identity --output text --query 'Account') \
         --repository <replace-with-repo-name>
     ```
-6. You should be seeing an output simillar to this:
+4. You should be seeing an output simillar to this:
  ![AWS CDK Constructs](./img/codeartifact-login.png "AWS CDK Constructs")
-7. run `npm install`
-8. Build a npm pacakges by `npm run build`
-9. Publish construct with the following command `npm publish`
-10. You should be seeing an output simillar to this:
+5. run `npm install`
+6. Build a npm pacakges by `npm run build`
+7. Publish construct with the following command `npm publish`
+8. You should be seeing an output simillar to this:
  ![AWS CDK Constructs](./img/codeartifact-npm-publish.png "AWS CDK Constructs")
-11. *Congratulations !! you made it!!*
-12. Now you can validate it by going to **AWS Console** in CodeArtifact service.
+9. *Congratulations !! you made it!!*
+10. Now you can validate it by going to **AWS Console** in CodeArtifact service.
 
-## Provision Infrastructure - Application Developer Role
+## Provision Infrastructure - Application Developer Role(Reuse-Construct)
 
 1. `cd ../prerequisites`
 2. Create CodeCommit Repo:
