@@ -25,7 +25,6 @@ export class CodeArtifactResources extends Stack {
     });
     codeArtifactRepoName.addDependsOn(codeArtifactNpmRepo)
     new CfnOutput(this, `${general}-coderartifact-repo-name`, { value: codeArtifactRepoName.repositoryName} )
-    new CfnOutput(this, `${general}-coderartifact-domain-name`, { value: codeArtifactRepoName.domainName} )
   }
 }
 const app = new App()

@@ -1,9 +1,7 @@
 {
-  "name": "codecommit",
+  "name": "team-a-lambda-pipeline",
+  "main": "lib/team-a-lambda-pipeline-stack.ts",
   "version": "0.1.0",
-  "bin": {
-    "codecommit": "bin/codecommit.js"
-  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
