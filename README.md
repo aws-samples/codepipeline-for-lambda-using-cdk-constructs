@@ -67,9 +67,8 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
 
 ## Provision Infrastructure - Package Developer Role(Build Construct)
 
-1. `cd ../../lambda-pipeline-construct/`
-2. (Optional) make necessary changes to `config/config.json`
-3. Replace Appropriate domain and repository in the following command and run it in `terminal`  
+1. `cd ../../package-developer/lambda-pipeline-construct/`
+2. Replace Appropriate domain and repository in the following command and run it in `terminal`  
      ```
      aws codeartifact login \
         --tool npm \
@@ -77,43 +76,42 @@ Role of the Application Developer is to include that `lambda-pipeline-construct`
         --domain-owner $(aws sts get-caller-identity --output text --query 'Account') \
         --repository <replace-with-repo-name>
     ```
-4. You should be seeing an output simillar to this:
+3. You should be seeing an output simillar to this:
  ![AWS CDK Constructs](./img/codeartifact-login.png "AWS CDK Constructs")
-5. run `npm install`
-6. Build a npm pacakges by `npm run build`
-7. Publish construct with the following command `npm publish`
-8. You should be seeing an output simillar to this:
+4. run `npm install`
+5. Build a npm pacakges by `npm run build`
+6. Publish construct with the following command `npm publish`
+7. You should be seeing an output simillar to this:
  ![AWS CDK Constructs](./img/codeartifact-npm-publish.png "AWS CDK Constructs")
-9. *Congratulations !! you made it!!*
-10. Now you can validate it by going to **AWS Console** in CodeArtifact service.
+8. *Congratulations !! you made it!!*
+9. Now you can validate it by going to **AWS Console** in CodeArtifact service.
+
+Note: If you run into this error 
+```npm ERR! code E401
+npm ERR! Unable to authenticate, your authentication token seems to be invalid.
+npm ERR! To correct this please trying logging in again with:
+```
+then delete package-lock.json file
 
 ## Provision Infrastructure - Application Developer Role(Reuse-Construct)
 
-1. `cd ../prerequisites`
-2. Create CodeCommit Repo:
-   1. `cd codecommit` folder and (Optional) make necessary changes to `config/config.json` file
-   2. run `npm install`
-   3. run  `cdk synth` review template file from `cdk.out` folder.
-   4. run `cdk deploy`
-   5. you should be seeing an output something like this and take note of `commitreponame`
-   ![AWS CDK Constructs](./img/codecommit-output.png "AWS CDK Constructs")
-3. Create ECR Repo:
-   1. `cd ../ecrrepo` folder and (Optional) make necessary changes to `config/config.json` file
-   2. run `npm install`
-   3. run  `cdk synth` review template file from `cdk.out` folder.
-   4. run `cdk deploy`
-   5. you should be seeing an output something like this and take note of `ecrreponame`
-   ![AWS CDK Constructs](./img/ecrrepo-output.png "AWS CDK Constructs")
-4. `cd ../../examples/team-a-lambda-pipeline`
-5. Open `package.json` review `dependencies` section `"lambda-pipeline-construct": "1.0.0"` if it doesnt exist please refer to `Provision Infrastructure - Package Developer` steps and update the package name.
-6. run `npm install`
-7. run  `cdk synth` review template file from `cdk.out` folder.
-8. run `cdk deploy`
-9. you should be able to see the output simillar to this:
+1. `cd ../../application-developer/team-a-lambda-pipeline/`
+2. Open `package.json` review `dependencies` section `"lambda-pipeline-construct": "1.0.0"` if it doesnt exist please refer to `Provision Infrastructure - Package Developer` steps and update the package name.
+3. run `npm install`
+4. run  `cdk synth` review template file from `cdk.out` folder.
+5. run `cdk deploy`
+6. you should be able to see the output simillar to this:
     ![Lambda Pipeline](./img/lambda-pipeline-output.png "Lambda Pipeline")
-10. Congratulations !! you made it !!.
-11. Now go to Codepipeline from AWS Console and you should be seeing a pipeline that has been created.
-12. Now, if you want to create a new pipeline for new team, all you need to do is copy `team-a-lambda-pipeline` folder and make necessary changes in `config/config.json` file and run `npm install` and `cdk deploy`. Thats it!!
+7. Congratulations !! you made it !!.
+8. Now go to Codepipeline from AWS Console and you should be seeing a pipeline that has been created.
+9. Now, if you want to create a new pipeline for new team, all you need to do is copy `team-a-lambda-pipeline` folder and make necessary changes in `config/config.json` file and run `npm install` and `cdk deploy`. Thats it!!
+
+Note: If you run into this error 
+```npm ERR! code E401
+npm ERR! Unable to authenticate, your authentication token seems to be invalid.
+npm ERR! To correct this please trying logging in again with:
+```
+then delete package-lock.json file
 
 Finally, dont forget to delete the resources by `cdk destroy` command from terminal.
 
